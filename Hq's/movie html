@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Movie Finder - Chub Edition 🎬</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #1a1a1a;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .search-box {
+            text-align: center;
+            margin: 20px 0;
+        }
+        input {
+            padding: 12px;
+            color:#0080DA;
+            width: 300px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        button {
+            padding: 12px 20px;
+            background: #0A9AFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+        button:hover {
+            background: #0080DA;
+        }
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .movie-card {
+            background: #2d2d2d;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: transform 0.3s;
+        }
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+        .movie-poster {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            cursor: pointer;
+        }
+        .movie-info {
+            padding: 15px;
+        }
+        .movie-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .movie-year {
+            color: #ccc;
+            font-size: 14px;
+        }
+        .loading {
+            text-align: center;
+            font-size: 20px;
+            margin: 50px;
+            color:#0080DA;
+            grid-column: 1/-1;
+        }
+        .movie-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        .modal-content {
+            background: #2d2d2d;
+            margin: 50px auto;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 800px;
+            position: relative;
+        }
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: white;
+        }
+        .movie-details {
+            display: flex;
+            gap: 30px;
+        }
+        .detail-poster {
+            width: 300px;
+            border-radius: 10px;
+        }
+        .detail-info {
+            flex: 1;
+        }
+        .detail-info h2 {
+            color: #0080DA;
+            margin-top: 0;
+        }
+        
+        /* Watch buttons */
+        .watch-btn, .stream-btn {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            font-size: 12px;
+            background: #e50914;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .stream-btn {
+            background: #007bff;
+        }
+        .watch-btn:hover {
+            background: #f40612;
+        }
+        .stream-btn:hover {
+            background: #0056b3;
+        }
+        
+        /* Streaming options */
+        .streaming-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+            justify-content: center;
+        }
+        .streaming-option {
+            background: #444;
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            color: white;
+            transition: background 0.3s;
+        }
+        .streaming-option:hover {
+            background: #555;
+        }
+        
+        /* MovieBox Streaming Styles */
+        .moviebox-container {
+            color: white;
+        }
+        .moviebox-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #444;
+        }
+        .streaming-quality {
+            display: flex;
+            gap: 10px;
+        }
+        .quality-badge {
+            background: #e50914;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .fake-video-player {
+            background: #000;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .video-placeholder {
+            background: linear-gradient(45deg, #1a1a1a, #2d2d2d);
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 8px;
+            position: relative;
+        }
+        .play-icon {
+            font-size: 60px;
+            color: #e50914;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+        .streaming-text {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #ccc;
+        }
+        .loading-bar {
+            width: 80%;
+            height: 4px;
+            background: #444;
+            border-radius: 2px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+        .loading-progress {
+            width: 75%;
+            height: 100%;
+            background: #e50914;
+            animation: loading 2s infinite;
+        }
+        @keyframes loading {
+            0% { width: 0%; }
+            50% { width: 75%; }
+            100% { width: 100%; }
+        }
+        .video-info {
+            display: flex;
+            justify-content: space-between;
+            width: 80%;
+            font-size: 12px;
+            color: #888;
+        }
+        .streaming-controls {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin: 15px 0;
+        }
+        .control-btn {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .control-btn:hover {
+            background: #444;
+        }
+        .moviebox-details {
+            background: #333;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        .detail-row {
+            margin: 8px 0;
+            display: flex;
+            justify-content: space-between;
+        }
+        .moviebox-actions {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            flex: 1;
+            min-width: 200px;
+        }
+        .action-btn.primary {
+            background: #e50914;
+            color: white;
+        }
+        .action-btn.secondary {
+            background: #333;
+            color: white;
+        }
+        .action-btn:hover {
+            opacity: 0.9;
+        }
+        .similar-movies {
+            margin-top: 30px;
+        }
+        .similar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .similar-movie {
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        .similar-movie:hover {
+            transform: scale(1.05);
+        }
+        .similar-movie img {
+            width: 100%;
+            border-radius: 8px;
+        }
+        .similar-title {
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        @media (max-width: 768px) {
+            .movie-details {
+                flex-direction: column;
+            }
+            .detail-poster {
+                width: 100%;
+            }
+            .moviebox-actions {
+                flex-direction: column;
+            }
+            .action-btn {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 style="text-align: center; color:#007bff ;">🎬 CH-Movie- Stream & Download</h1>
+        
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Search for movies..." onkeypress="handleKeyPress(event)">
+            <button onclick="searchMovies()">Search</button>
+            <button onclick="getPopularMovies()">Popular Movies</button>
+        </div>
+
+        <div id="moviesContainer" class="movies-grid">
+            <div class="loading">Loading popular movies...</div>
+        </div>
+    </div>
+
+    <!-- Movie Details Modal -->
+    <div id="movieModal" class="movie-modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalContent"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_KEY = '89802458aff508c9c6eff8b7290d8970'; // REPLACE WITH YOUR API KEY
+        const BASE_URL = 'https://api.themoviedb.org/3';
+
+        window.onload = getPopularMovies;
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                searchMovies();
+            }
+        }
+
+        async function searchMovies() {
+            const searchTerm = document.getElementById('searchInput').value.trim();
+            
+            if (!searchTerm) {
+                alert('Please enter a movie name!');
+                return;
+            }
+
+            showLoading();
+            
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/search/movie?api_key=${API_KEY}&query=${encodeURIComponent(searchTerm)}`
+                );
+                const data = await response.json();
+                displayMovies(data.results);
+            } catch (error) {
+                showError('Failed to search movies. Please try again.');
+            }
+        }
+
+        async function getPopularMovies() {
+            showLoading();
+            
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/movie/popular?api_key=${API_KEY}`
+                );
+                const data = await response.json();
+                displayMovies(data.results);
+            } catch (error) {
+                showError('Failed to load popular movies.');
+            }
+        }
+
+        function displayMovies(movies) {
+            const container = document.getElementById('moviesContainer');
+            
+            if (!movies || movies.length === 0) {
+                container.innerHTML = '<div class="loading">No movies found. Try a different search.</div>';
+                return;
+            }
+
+            container.innerHTML = movies.map(movie => `
+                <div class="movie-card">
+                    <img 
+                        src="${movie.poster_path ? 
+                            `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 
+                            'https://via.placeholder.com/500x750/2d2d2d/ffffff?text=No+Image'
+                        }" 
+                        alt="${movie.title}"
+                        class="movie-poster"
+                        onclick="showMovieDetails(${movie.id})"
+                    >
+                    <div class="movie-info">
+                        <div class="movie-title">${movie.title}</div>
+                        <div class="movie-year">${movie.release_date ? movie.release_date.substring(0,4) : 'Unknown'}</div>
+                        <div class="movie-rating">⭐ ${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}</div>
+                        <button class="watch-btn" onclick="watchTrailer(${movie.id})">🎬 Watch on Ch-Movie-Hub</button>
+                        <button class="stream-btn" onclick="findStreaming(${movie.id}, '${movie.title}')">📺 Streaming Options</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function showMovieDetails(movieId) {
+            showLoading();
+            
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`
+                );
+                const movie = await response.json();
+                
+                displayMovieDetails(movie);
+            } catch (error) {
+                showError('Failed to load movie details.');
+            }
+        }
+
+        function displayMovieDetails(movie) {
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <div class="movie-details">
+                    <img 
+                        src="${movie.poster_path ? 
+                            `https://image.tmdb.org/t/p/w500${movie.poster_path}` : 
+                            'https://via.placeholder.com/500x750/2d2d2d/ffffff?text=No+Image'
+                        }" 
+                        alt="${movie.title}"
+                        class="detail-poster"
+                    >
+                    <div class="detail-info">
+                        <h2>${movie.title} (${movie.release_date ? movie.release_date.substring(0,4) : 'Unknown'})</h2>
+                        <p><strong>Rating:</strong> ⭐ ${movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A'}/10</p>
+                        <p><strong>Runtime:</strong> ${movie.runtime ? `${movie.runtime} minutes` : 'Unknown'}</p>
+                        <p><strong>Genre:</strong> ${movie.genres ? movie.genres.map(genre => genre.name).join(', ') : 'Unknown'}</p>
+                        <p><strong>Overview:</strong> ${movie.overview || 'No description available.'}</p>
+                        <p><strong>Release Date:</strong> ${movie.release_date || 'Unknown'}</p>
+                        
+                        <div style="margin-top: 20px;">
+                            <button onclick="watchTrailer(${movie.id})" class="watch-btn" style="width: auto; margin-right: 10px;">
+                                🎬 Watch on MovieBox
+                            </button>
+                            <button onclick="findStreaming(${movie.id}, '${movie.title}')" class="stream-btn" style="width: auto;">
+                                📺 Other Streaming Options
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('movieModal').style.display = 'block';
+        }
+
+        async function watchTrailer(movieId) {
+            showLoading();
+            
+            try {
+                const movieResponse = await fetch(
+                    `${BASE_URL}/movie/${movieId}?api_key=${API_KEY}`
+                );
+                const movie = await movieResponse.json();
+                
+                showMovieBoxStreaming(movie);
+            } catch (error) {
+                showError('Failed to load movie for streaming.');
+            }
+        }
+
+        function showMovieBoxStreaming(movie) {
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <div class="moviebox-container">
+                    <div class="moviebox-header">
+                        <h2>🎬 MovieBox - Streaming "${movie.title}"</h2>
+                        <div class="streaming-quality">
+                            <span class="quality-badge">HD</span>
+                            <span class="quality-badge">1080p</span>
+                        </div>
+                    </div>
+                    
+                    <div class="streaming-player">
+                        <div class="fake-video-player">
+                            <div class="video-placeholder">
+                                <div class="play-icon">▶</div>
+                                <div class="streaming-text">Streaming: ${movie.title}</div>
+                                <div class="loading-bar">
+                                    <div class="loading-progress"></div>
+                                </div>
+                                <div class="video-info">
+                                    <span>00:00 / ${movie.runtime ? movie.runtime + ':00' : '--:--'}</span>
+                                    <span>📡 Buffer: 98%</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="streaming-controls">
+                            <button class="control-btn" onclick="simulatePlay()">⏯️ Play</button>
+                            <button class="control-btn" onclick="simulatePause()">⏸️ Pause</button>
+                            <button class="control-btn" onclick="simulateFullscreen()">⛶ Fullscreen</button>
+                            <button class="control-btn" onclick="changeQuality()">⚡ Quality</button>
+                            <button class="control-btn" onclick="downloadMovie()">📥 Download</button>
+                        </div>
+                    </div>
+                    
+                    <div class="moviebox-details">
+                        <div class="detail-row">
+                            <strong>Title:</strong> ${movie.title}
+                        </div>
+                        <div class="detail-row">
+                            <strong>Quality:</strong> HD 1080p
+                        </div>
+                        <div class="detail-row">
+                            <strong>Size:</strong> ${(Math.random() * 2 + 1.5).toFixed(1)} GB
+                        </div>
+                        <div class="detail-row">
+                            <strong>Format:</strong> MP4
+                        </div>
+                        <div class="detail-row">
+                            <strong>Server:</strong> Streaming Server #${Math.floor(Math.random() * 10) + 1}
+                        </div>
+                    </div>
+                    
+                    <div class="moviebox-actions">
+                        <button class="action-btn primary" onclick="simulateDownload()">
+                            📥 Download Movie (${(Math.random() * 2 + 1.5).toFixed(1)} GB)
+                        </button>
+                        <button class="action-btn secondary" onclick="showMovieDetails(${movie.id})">
+                            ℹ️ Movie Details
+                        </button>
+                        <button class="action-btn secondary" onclick="findStreaming(${movie.id}, '${movie.title}')">
+                            📺 Other Streaming Options
+                        </button>
+                    </div>
+                    
+                    <div class="similar-movies">
+                        <h3>🎭 You Might Also Like</h3>
+                        <div id="similarMovies" class="similar-grid">
+                            Loading similar movies...
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('movieModal').style.display = 'block';
+            loadSimilarMovies(movie.id);
+        }
+
+        // MovieBox simulation function
+function simulatePlay() {
+            alert('▶ Movie is noow playing...');
+            document.querySelector('.play-icon').style.display = 'none';
+            document.querySelector('.streaming-text').textContent = 'Now Playing...';
+        }
+
+        function simulatePause() {
+            alert('⏸️ Movie paused');
+            document.querySelector('.play-icon').style.display = 'block';
+            document.querySelector('.streaming-text').textContent = 'Paused - Click Play to continue';
+        }
+
+        function simulateFullscreen() {
+            alert('⛶ Entering fullscreen mode...');
+            document.querySelector('.fake-video-player').style.width = '100%';
+            document.querySelector('.fake-video-player').style.height = '500px';
+        }
+
+        function changeQuality() {
+            const qualities = ['480p', '720p', '1080p', '4K'];
+            const currentQuality = document.querySelector('.quality-badge').textContent;
+            const nextQuality = qualities[(qualities.indexOf(currentQuality) + 1) % qualities.length];
+            
+            document.querySelectorAll('.quality-badge').forEach(badge => {
+                badge.textContent = nextQuality;
+            });
+            alert(`Quality changed to ${nextQuality}`);
+        }
+
+        function simulateDownload() {
+            const size = (Math.random() * 2 + 1.5).toFixed(1);
+            alert(`📥 Download started! File size: ${size} GB\nEstimated time: ${Math.floor(Math.random() * 10) + 5} minutes`);
+        }
+
+        async function loadSimilarMovies(movieId) {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/movie/${movieId}/similar?api_key=${API_KEY}`
+                );
+                const data = await response.json();
+                
+                const similarContainer = document.getElementById('similarMovies');
+                if (data.results && data.results.length > 0) {
+                    similarContainer.innerHTML = data.results.slice(0, 4).map(movie => `
+                        <div class="similar-movie" onclick="showMovieDetails(${movie.id})">
+                            <img src="${movie.poster_path ? 
+                                `https://image.tmdb.org/t/p/w200${movie.poster_path}` : 
+                                'https://via.placeholder.com/200x300/2d2d2d/ffffff?text=No+Image'
+                            }" alt="${movie.title}">
+                            <div class="similar-title">${movie.title}</div>
+                        </div>
+                    `).join('');
+                } else {
+                    similarContainer.innerHTML = '<p>No similar movies found.</p>';
+                }
+            } catch (error) {
+                document.getElementById('similarMovies').innerHTML = '<p>Error loading similar movies.</p>';
+            }
+        }
+
+        // Keep the existing findStreaming, closeModal, showLoading, showError functions
+        async function findStreaming(movieId, movieTitle) {
+            showLoading();
+            
+            try {
+                const streamingInfo = await getStreamingInfo(movieId, movieTitle);
+                showStreamingOptions(streamingInfo, movieTitle, movieId);
+            } catch (error) {
+                showStreamingSearch(movieTitle, movieId);
+            }
+        }
+
+        async function getStreamingInfo(movieId, movieTitle) {
+            try {
+                const response = await fetch(
+                    `${BASE_URL}/movie/${movieId}/watch/providers?api_key=${API_KEY}`
+                );
+                const data = await response.json();
+                
+                if (data.results && data.results.US) {
+                    return data.results.US;
+                }
+            } catch (error) {
+                console.log('Could not get streaming info from TMDB');
+            }
+            
+            return {
+                link: `https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}`,
+                flatrate: [{ provider_name: "Search on JustWatch" }]
+            };
+        }
+
+        function showStreamingOptions(streamingInfo, movieTitle, movieId) {
+            const modalContent = document.getElementById('modalContent');
+            
+            let streamingHTML = '';
+            
+            if (streamingInfo.flatrate && streamingInfo.flatrate.length > 0) {
+                streamingHTML = `
+                    <h3>🎯 Available on:</h3>
+                    <div class="streaming-options">
+                        ${streamingInfo.flatrate.map(provider => `
+                            <div class="streaming-option">
+                                ${provider.provider_name}
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else {
+                streamingHTML = `
+                    <h3>🔍 Find where to watch:</h3>
+                    <div class="streaming-options">
+                        <a href="https://www.netflix.com/search?q=${encodeURIComponent(movieTitle)}" 
+                           target="_blank" class="streaming-option">Netflix</a>
+                        <a href="https://www.hulu.com/search?q=${encodeURIComponent(movieTitle)}" 
+                           target="_blank" class="streaming-option">Hulu</a>
+                        <a href="https://www.amazon.com/s?k=${encodeURIComponent(movieTitle)}+movie" 
+                           target="_blank" class="streaming-option">Amazon Prime</a>
+                        <a href="https://www.disneyplus.com/search?q=${encodeURIComponent(movieTitle)}" 
+                           target="_blank" class="streaming-option">Disney+</a>
+                        <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" 
+                           target="_blank" class="streaming-option">JustWatch</a>
+                    </div>
+                `;
+            }
+            
+            modalContent.innerHTML = `
+                <div style="text-align: center;">
+                    <h2>📺 Where to Watch "${movieTitle}"</h2>
+                    ${streamingHTML}
+                    <div style="margin-top: 30px;">
+                        <button onclick="closeModal()" class="watch-btn">Close</button>
+                        <button onclick="watchTrailer(${movieId})" class="stream-btn">Watch on MovieBox</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('movieModal').style.display = 'block';
+        }
+
+        function showStreamingSearch(movieTitle, movieId) {
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <div style="text-align: center;">
+                    <h2>🔍 Find "${movieTitle}"</h2>
+                    <p>Search for this movie on popular streaming platforms:</p>
+                    
+                    <div class="streaming-options">
+                        <a href="https://www.netflix.com/search?q=${encodeURIComponent(movieTitle)}" 
+                           target="_blank" class="streaming-option">Netflix</a>
+                        <a href="https://www.hulu.com/search?q=${encodeURIComponent(movieTitle)}" 
+                           target="_blank" class="streaming-option">Hulu</a>
+                        <a href="https://www.amazon.com/s?k=${encodeURIComponent(movieTitle)}+movie" 
+                           target="_blank" class="streaming-option">Amazon Prime</a>
+                        <a href="https://www.disneyplus.com/search?q=${encodeURIComponent(movieTitle)}" 
+                           target="_blank" class="streaming-option">Disney+</a>
+                        <a href="https://www.hbomax.com/search?q=${encodeURIComponent(movieTitle)}" 
+                           target="_blank" class="streaming-option">HBO Max</a>
+                        <a href="https://www.justwatch.com/us/search?q=${encodeURIComponent(movieTitle)}" 
+                           target="_blank" class="streaming-option">JustWatch</a>
+                    </div>
+                    
+                    <div style="margin-top: 30px;">
+                        <button onclick="closeModal()" class="watch-btn">Close</button>
+                        <button onclick="watchTrailer(${movieId})" class="stream-btn">Watch on MovieBox</button>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('movieModal').style.display = 'block';
+        }
+
+        function closeModal() {
+            document.getElementById('movieModal').style.display = 'none';
+        }
+
+        function showLoading() {
+            document.getElementById('moviesContainer').innerHTML = 
+                '<div class="loading">Loading movies...</div>';
+        }
+
+        function showError(message) {
+            document.getElementById('moviesContainer').innerHTML = 
+                `<div class="loading" style="color: #e50914;">${message}</div>`;
+                
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('movieModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+</body>
+</html>
