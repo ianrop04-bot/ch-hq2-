@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ch Hub</title>
+</head>
+<style>
+  *{
+    margin:0;
+    padding:0;
+  }
+  body{
+    font-family: monospace;
+    font-style: italic;
+  }
+  header{
+    
+    width :100%;
+    
+    padding: 20px;
+    position: fixed;
+    background:linear-gradient(135deg,#1C7890,#13AFD8,#1BD0FF);
+  }
+  table {
+    width: 90%;
+    border-collapse: collapse;  /* Merges cell borders */
+    margin: 20px 0;
+    font-family: Arial, sans-serif;
+    border-radius: 15px;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  } 
+  
+  th {
+    background-color: #05D3FF;
+    color: white;
+    font-weight: bold;
+  }
+  input{
+    margin:10px;
+    width:80%;
+    border-radius: 9px;
+    color:#05D3FF;
+    padding:20px;
+    border: none;
+    font-family: monospace;
+    font-size: 15px;
+  }
+button{
+  background: linear-gradient(240deg,#05D3FF,#008AEB);
+  margin:10px;
+  padding:10px;
+  border-radius: 15px;
+}
+#auth{
+  margin:10px;
+  padding:20px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px #0F2F45;
+  
+}
+.feature{
+  animation:change 2s infinite alternate;
+  margin:30px;
+  padding:30px;
+  background: #DDDDDD;
+  box-shadow:0 0 10px #0A9AFF,0 0 20px#0A9AFF,0 0 30px#0A9AFF;
+  border-radius: 15px;
+}
+@keyframes change{
+  from{
+    transform:translateY(+2px);
+    box-shadow:0 0 5px #0A9AFF,0 0 10px#0A9AFF,0 0 20px#0A9AFF;
+
+  }
+  to{
+    transform:translateY(-5px);
+    box-shadow:0 0 10px #0A9AFF,0 0 20px#0A9AFF,0 0 30px#0A9AFF;
+
+  }
+}
+#message{
+  border-radius: 15px;
+  padding:20px;
+  margin:10px;
+}
+</style>
+<body>
+    <center>
+  <header>
+  
+    <h1>Welcome To creative Hub</h1>
+    <h4>Dashboard</h4>
+<button onclick="logout()">Log Out</button>
+  </header><br /><br /><br /><br /><br /><br /><br /><br><br>
+  <div id="auth">
+    
+    <h2>We need Username For remeberance</h2>
+    <input type="email" id="email"placeholder="Username"required>
+    <button onclick="sum()">SUMBMIT</button>
+  </div>
+  <div id="F" style="display:none;">
+    <div class="gree">
+      <h2 id="greeting"></h2>
+    </div>
+    <div>
+      <h3>Wecome at Our powerfull web</h3>
+      <p>We Help On service,Ideas and programming teacher</p>
+      <ul>We Do In Level</ul>
+      <table >
+        <tr class="header">
+          <th>List</th>
+          <th>Percent</th>
+        </tr>
+        <tr>
+          <td>Animation</td>
+          <td style="color: yellow;">55%</td>
+        </tr>
+        <tr>
+          <td>Webs/coding</td>
+          <td style="color: orange;">85%</td>
+        </tr>
+        <tr>
+          <td>Creating Servers</td>
+          <td style="color: green;">95%</td>
+        </tr>
+      </table>
+      <div class="2">
+        <button onclick="Join()">Support Us🎁</button>
+      </div>
+    </div>
+    <div class="3">
+      <button onclick="join1()">Join Our Community</button>
+  
+    </div>
+    <h4>supports</h4>
+    <h5>Tap one</h5>
+    <div class="feature">
+      <h3>Image Wallpaper</h3>
+      <button onclick="img()"style="background:transparent;border:none;">Grt image Free</button>
+    </div>
+    <div class="feature">
+      <h3>Movies-streams</h3>
+      <button onclick="movie()"style="background:transparent;border:none;">Get and download Sreaming movies</button>
+    </div>
+    <div class="feature">
+      <h3>Our server is online 24/7 & 100% online</h3>
+    </div>
+
+  </div>
+  <div id="message"></div>
+      </center>
+      <script>
+      const saved= localStorage.getItem('saved')
+      if (saved) {
+        let name=document.getElementById('email').value
+          let home=document.getElementById('F')
+          let greet = document.getElementById('greeting')
+          let auth=document.getElementById('auth')
+    
+home.style.display='block'
+greet.innerHTML=`Welcome Back `
+auth.style.display='none'
+      }
+      function show(content,color){
+        const message=document.getElementById('message');
+        message.innerHTML=content;
+        message.style.background=color;
+        setTimeout(() => {
+          message.innerHTML=''
+          message.style.background='none'
+        },2000)
+      }
+        function sum(){
+          let name=document.getElementById('email').value
+          let home=document.getElementById('F')
+          let greet = document.getElementById('greeting')
+          let auth=document.getElementById('auth')
+          if (!name) {
+            show('Please Enter Username','orange')
+            return
+          }
+home.style.display='block'
+greet.innerHTML=`Welcome ${name}`
+auth.style.display='none'
+localStorage.setItem('saved',name)
+        }
+        function logout(){
+          document.getElementById('F').style.display='none'
+          document.getElementById('auth').style.display='block'
+          localStorage.setItem('saved',document.getElementById('auth'))
+        }
+        function movie(){
+          window.open('movie.html')
+        }
+        
+      </script>
+</body>
+
+    </html>
