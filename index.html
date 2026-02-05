@@ -1,206 +1,1022 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ch Hub</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Hub Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <style>
-  *{
-    margin:0;
-    padding:0;
-  }
-  body{
-    font-family: monospace;
-    font-style: italic;
-  }
-  header{
-    
-    width :100%;
-    
-    padding: 20px;
-    position: fixed;
-    background:linear-gradient(135deg,#1C7890,#13AFD8,#1BD0FF);
-  }
-  table {
-    width: 90%;
-    border-collapse: collapse;  /* Merges cell borders */
-    margin: 20px 0;
-    font-family: Arial, sans-serif;
-    border-radius: 15px;
+  /* Global Styles */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
   
-  th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-  } 
+  body {
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    color: #333;
+    min-height: 100vh;
+    overflow-x: hidden;
+    transition: all 0.4s ease;
+  }
   
-  th {
-    background-color: #05D3FF;
+  body.dark-mode {
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+    color: #f0f0f0;
+  }
+  
+  /* Header with Navigation */
+  .dashboard-header {
+    background: linear-gradient(135deg, #00a8ff 0%, #0097e6 100%);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    animation: slideDown 0.6s ease-out;
+  }
+  
+  .logo-section {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+  }
+  
+  .logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    animation: gentleRotate 8s infinite linear;
+    border: 2px solid white;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+  }
+  
+  @keyframes gentleRotate {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .nav-tabs {
+    display: flex;
+    gap: 5px;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 5px;
+    border-radius: 50px;
+    backdrop-filter: blur(10px);
+  }
+  
+  .tab-btn {
+    padding: 10px 25px;
+    border: none;
+    background: transparent;
     color: white;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .tab-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+  }
+  
+  .tab-btn.active {
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+  
+  /* Main Content Area */
+  .main-content {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  
+  /* Section Styles */
+  .content-section {
+    display: none;
+    animation: fadeInUp 0.5s ease-out;
+  }
+  
+  .content-section.active {
+    display: block;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Home Section */
+  .hero-section {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    animation: slideInFromLeft 0.7s ease-out;
+  }
+  
+  .dark-mode .hero-section {
+    background: rgba(30, 30, 46, 0.9);
+  }
+  
+  @keyframes slideInFromLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .hero-title {
+    font-size: 2.8rem;
+    background: linear-gradient(135deg, #00a8ff, #0097e6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 1rem;
+  }
+  
+  .dark-mode .hero-title {
+    background: linear-gradient(135deg, #00d2ff, #0097e6);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .hero-subtitle {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .dark-mode .hero-subtitle {
+    color: #aaa;
+  }
+  
+  .cta-button {
+    background: linear-gradient(135deg, #00a8ff 0%, #0097e6 100%);
+    color: white;
+    border: none;
+    padding: 14px 35px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(0, 168, 255, 0.3);
+  }
+  
+  .cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0, 168, 255, 0.4);
+  }
+  
+  /* Features Grid */
+  .features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin: 3rem 0;
+  }
+  
+  .feature-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.8rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    border-top: 4px solid #00a8ff;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  .dark-mode .feature-card {
+    background: rgba(40, 40, 60, 0.9);
+  }
+  
+  .feature-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .feature-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-icon {
+    font-size: 2.8rem;
+    color: #00a8ff;
+    margin-bottom: 1.2rem;
+  }
+  
+  .feature-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.8rem;
+    color: #333;
+  }
+  
+  .dark-mode .feature-title {
+    color: #fff;
+  }
+  
+  .feature-desc {
+    color: #666;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+  
+  .dark-mode .feature-desc {
+    color: #ccc;
+  }
+  
+  /* API Configuration Box */
+  .api-box {
+    background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+    border-radius: 15px;
+    overflow: hidden;
+    margin: 3rem 0;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    animation: slideInFromRight 0.7s ease-out 0.2s both;
+  }
+  
+  @keyframes slideInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  .api-header {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1.2rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .api-title {
+    color: white;
+    font-size: 1.3rem;
+  }
+  
+  .copy-btn {
+    background: rgba(255, 255, 255, 0.15);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+  }
+  
+  .copy-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+  }
+  
+  .api-content {
+    padding: 1.8rem;
+    font-family: 'Courier New', monospace;
+    color: #ecf0f1;
+    line-height: 1.8;
+  }
+  
+  .api-key {
+    color: #f39c12;
     font-weight: bold;
   }
-  input{
-    margin:10px;
-    width:80%;
-    border-radius: 9px;
-    color:#05D3FF;
-    padding:20px;
-    border: none;
-    font-family: monospace;
-    font-size: 15px;
-  }
-button{
-  background: linear-gradient(240deg,#05D3FF,#008AEB);
-  margin:10px;
-  padding:10px;
-  border-radius: 15px;
-}
-#auth{
-  margin:10px;
-  padding:20px;
-  border-radius: 15px;
-  box-shadow: 0 0 10px #0F2F45;
   
-}
-.feature{
-  animation:change 2s infinite alternate;
-  margin:30px;
-  padding:30px;
-  background: #DDDDDD;
-  box-shadow:0 0 10px #0A9AFF,0 0 20px#0A9AFF,0 0 30px#0A9AFF;
-  border-radius: 15px;
-}
-@keyframes change{
-  from{
-    transform:translateY(+2px);
-    box-shadow:0 0 5px #0A9AFF,0 0 10px#0A9AFF,0 0 20px#0A9AFF;
-
+  .api-value {
+    color: #95a5a6;
   }
-  to{
-    transform:translateY(-5px);
-    box-shadow:0 0 10px #0A9AFF,0 0 20px#0A9AFF,0 0 30px#0A9AFF;
-
+  
+  /* Service Section */
+  .services-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 2rem;
   }
-}
-#message{
-  border-radius: 15px;
-  padding:20px;
-  margin:10px;
-}
+  
+  .service-item {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  .dark-mode .service-item {
+    background: rgba(40, 40, 60, 0.9);
+  }
+  
+  .service-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .service-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .service-icon {
+    font-size: 3rem;
+    color: #00a8ff;
+    margin-bottom: 1.2rem;
+  }
+  
+  .contact-link {
+    display: inline-block;
+    margin-top: 1.2rem;
+    color: #00a8ff;
+    font-weight: 600;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+  }
+  
+  .contact-link:hover {
+    border-bottom: 2px solid #00a8ff;
+  }
+  
+  /* QR Section */
+  .qr-section {
+    text-align: center;
+    padding: 3rem;
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  }
+  
+  .dark-mode .qr-section {
+    background: rgba(40, 40, 60, 0.9);
+  }
+  
+  .qr-button {
+    background: linear-gradient(135deg, #00a8ff 0%, #0097e6 100%);
+    color: white;
+    border: none;
+    padding: 14px 35px;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin: 2rem 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+  }
+  
+  .qr-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 25px rgba(0, 168, 255, 0.4);
+  }
+  
+  .spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(0, 168, 255, 0.2);
+    border-top: 5px solid #00a8ff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 2rem auto;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  /* Settings Section */
+  .settings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 2rem;
+  }
+  
+  .theme-card {
+    background: linear-gradient(135deg, #00a8ff 0%, #0097e6 100%);
+    border-radius: 15px;
+    padding: 2rem;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .theme-toggle {
+    position: relative;
+    width: 70px;
+    height: 34px;
+  }
+  
+  .theme-toggle input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+  }
+  
+  .theme-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.3);
+    transition: .4s;
+    border-radius: 34px;
+  }
+  
+  .theme-slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+  }
+  
+  input:checked + .theme-slider {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+  
+  input:checked + .theme-slider:before {
+    transform: translateX(36px);
+  }
+  
+  .social-card {
+    background: white;
+    border-radius: 15px;
+    padding: 1.8rem;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  .dark-mode .social-card {
+    background: rgba(40, 40, 60, 0.9);
+  }
+  
+  .social-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  
+  .social-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: white;
+  }
+  
+  .youtube-icon {
+    background: linear-gradient(135deg, #ff0000, #cc0000);
+  }
+  
+  .whatsapp-icon {
+    background: linear-gradient(135deg, #25d366, #128c7e);
+  }
+  
+  /* Tools Section */
+  .tools-section {
+    margin-top: 3rem;
+    padding: 2rem 0;
+  }
+  
+  .tools-title {
+    text-align: center;
+    font-size: 2.2rem;
+    margin-bottom: 2.5rem;
+    color: #333;
+  }
+  
+  .dark-mode .tools-title {
+    color: #fff;
+  }
+  
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+  }
+  
+  .tool-card {
+    background: white;
+    border-radius: 15px;
+    padding: 2rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border-left: 5px solid #00a8ff;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  
+  .dark-mode .tool-card {
+    background: rgba(40, 40, 60, 0.9);
+  }
+  
+  .tool-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .tool-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  }
+  
+  .tool-icon {
+    font-size: 2.5rem;
+    color: #00a8ff;
+    margin-bottom: 1rem;
+  }
+  
+  .tool-action {
+    color: #00a8ff;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  /* Footer */
+  .dashboard-footer {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 3rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+  
+  .dark-mode .dashboard-footer {
+    color: #aaa;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .dashboard-header {
+      flex-direction: column;
+      gap: 15px;
+      padding: 1rem;
+    }
+    
+    .nav-tabs {
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .main-content {
+      padding: 1rem;
+    }
+    
+    .hero-title {
+      font-size: 2.2rem;
+    }
+    
+    .features-grid,
+    .services-container,
+    .settings-grid,
+    .tools-grid {
+      grid-template-columns: 1fr;
+    }
+  }
 </style>
 <body>
-    <center>
-  <header>
-  
-    <h1>Welcome To creative Hub</h1>
-    <h4>Dashboard</h4>
-<button onclick="logout()">Log Out</button>
-  </header><br /><br /><br /><br /><br /><br /><br /><br><br>
-  <div id="auth">
-    
-    <h2>We need Username For remeberance</h2>
-    <input type="email" id="email"placeholder="Username"required>
-    <button onclick="sum()">SUMBMIT</button>
-  </div>
-  <div id="F" style="display:none;">
-    <div class="gree">
-      <h2 id="greeting"></h2>
+  <!-- Header with Navigation -->
+  <header class="dashboard-header">
+    <div class="logo-section">
+      <img src="IMG-20251210-WA0002.jpg" class="logo" alt="Creative Hub Logo">
+      <h1 style="color: white;">Creative Hub</h1>
     </div>
-    <div>
-      <h3>Wecome at Our powerfull web</h3>
-      <p>We Help On service,Ideas and programming teacher</p>
-      <ul>We Do In Level</ul>
-      <table >
-        <tr class="header">
-          <th>List</th>
-          <th>Percent</th>
-        </tr>
-        <tr>
-          <td>Animation</td>
-          <td style="color: yellow;">55%</td>
-        </tr>
-        <tr>
-          <td>Webs/coding</td>
-          <td style="color: orange;">85%</td>
-        </tr>
-        <tr>
-          <td>Creating Servers</td>
-          <td style="color: green;">95%</td>
-        </tr>
-      </table>
-      <div class="2">
-        <button onclick="Join()">Support Us🎁</button>
+    
+    <nav class="nav-tabs">
+      <button class="tab-btn active" data-target="home">
+        <i class="fas fa-home"></i> Home
+      </button>
+      <button class="tab-btn" data-target="service">
+        <i class="fas fa-concierge-bell"></i> Service
+      </button>
+      <button class="tab-btn" data-target="pair">
+        <i class="fas fa-qrcode"></i> QR Pair
+      </button>
+      <button class="tab-btn" data-target="settings">
+        <i class="fas fa-cog"></i> Settings
+      </button>
+    </nav>
+  </header>
+  
+  <!-- Main Content Area -->
+  <main class="main-content">
+    <!-- Home Section (Active by default) -->
+    <section id="home" class="content-section active">
+      <div class="hero-section">
+        <h1 class="hero-title">Welcome to Creative Hub</h1>
+        <p class="hero-subtitle">Your all-in-one dashboard for animations, AI tools, and creative solutions</p>
+        <button class="cta-button" data-target="pair">
+          <i class="fas fa-rocket"></i> Get Started
+        </button>
       </div>
-    </div>
-    <div class="3">
-      <button onclick="join1()">Join Our Community</button>
-  
-    </div>
-    <h4>supports</h4>
-    <h5>Tap one</h5>
-    <div class="feature">
-      <h3>Image Wallpaper</h3>
-      <button onclick="img()"style="background:transparent;border:none;">Grt image Free</button>
-    </div>
-    <div class="feature">
-      <h3>Movies-streams</h3>
-      <button onclick="movie()"style="background:transparent;border:none;">Get and download Sreaming movies</button>
-    </div>
-    <div class="feature">
-      <h3>Our server is online 24/7 & 100% online</h3>
-    </div>
-
-  </div>
-  <div id="message"></div>
-      </center>
-      <script>
-      const saved= localStorage.getItem('saved')
-      if (saved) {
-        let name=document.getElementById('email').value
-          let home=document.getElementById('F')
-          let greet = document.getElementById('greeting')
-          let auth=document.getElementById('auth')
-    
-home.style.display='block'
-greet.innerHTML=`Welcome Back `
-auth.style.display='none'
-      }
-      function show(content,color){
-        const message=document.getElementById('message');
-        message.innerHTML=content;
-        message.style.background=color;
-        setTimeout(() => {
-          message.innerHTML=''
-          message.style.background='none'
-        },2000)
-      }
-        function sum(){
-          let name=document.getElementById('email').value
-          let home=document.getElementById('F')
-          let greet = document.getElementById('greeting')
-          let auth=document.getElementById('auth')
-          if (!name) {
-            show('Please Enter Username','orange')
-            return
-          }
-home.style.display='block'
-greet.innerHTML=`Welcome ${name}`
-auth.style.display='none'
-localStorage.setItem('saved',name)
-        }
-        function logout(){
-          document.getElementById('F').style.display='none'
-          document.getElementById('auth').style.display='block'
-          localStorage.setItem('saved',document.getElementById('auth'))
-        }
-        function movie(){
-          window.open('Hq/movie.html')
-        }
+      
+      <div class="features-grid">
+        <div class="feature-card" data-delay="0.1">
+          <i class="fas fa-film feature-icon"></i>
+          <h3 class="feature-title">Animations & Animes</h3>
+          <p class="feature-desc">Professional animation services and anime resources for creators and enthusiasts.</p>
+        </div>
         
-      </script>
+        <div class="feature-card" data-delay="0.2">
+          <i class="fas fa-robot feature-icon"></i>
+          <h3 class="feature-title">AI Tools & Bots</h3>
+          <p class="feature-desc">Deploy powerful AI bots with premium key support and advanced features.</p>
+        </div>
+        
+        <div class="feature-card" data-delay="0.3">
+          <i class="fas fa-search feature-icon"></i>
+          <h3 class="feature-title">Content Finder</h3>
+          <p class="feature-desc">Find movies, animes, and trailers with our comprehensive search tools.</p>
+        </div>
+      </div>
+      
+      <div class="api-box">
+        <div class="api-header">
+          <h3 class="api-title">API Configuration</h3>
+          <button class="copy-btn" id="copyApiBtn">
+            <i class="fas fa-copy"></i> Copy Config
+          </button>
+        </div>
+        <div class="api-content">
+          <p><span class="api-key">API_KEY</span> = "<span class="api-value">//your_api_key_here</span>"</p>
+          <p><span class="api-key">BASE_URL</span> = "<span class="api-value">your_base_url + api_key</span>"</p>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Service Section -->
+    <section id="service" class="content-section">
+      <div class="hero-section">
+        <h1 class="hero-title">Our Services</h1>
+        <p class="hero-subtitle">How can we help you today? Choose from our range of creative solutions</p>
+      </div>
+      
+      <div class="services-container">
+        <div class="service-item" data-delay="0.1">
+          <i class="fas fa-headset service-icon"></i>
+          <h3>Technical Support</h3>
+          <p>Get help with API setup, bot deployment, and troubleshooting.</p>
+          <a href="https://wa.me/254707933586" class="contact-link">Contact Support</a>
+        </div>
+        
+        <div class="service-item" data-delay="0.2">
+          <i class="fas fa-code service-icon"></i>
+          <h3>Custom Development</h3>
+          <p>Need a custom bot or AI tool? We build solutions tailored to your needs.</p>
+          <a href="https://wa.me/254707933586" class="contact-link">Request Quote</a>
+        </div>
+        
+        <div class="service-item" data-delay="0.3">
+          <i class="fas fa-cogs service-icon"></i>
+          <h3>Maintenance & Updates</h3>
+          <p>Keep your tools running smoothly with our maintenance plans.</p>
+          <a href="https://wa.me/254707933586" class="contact-link">Learn More</a>
+        </div>
+      </div>
+    </section>
+    
+    <!-- QR Pair Section -->
+    <section id="pair" class="content-section">
+      <div class="qr-section">
+        <h1 class="hero-title">QR Code Pairing</h1>
+        <p class="hero-subtitle">Generate a QR code to connect your devices and access premium features</p>
+        
+        <button class="qr-button" id="generateQrBtn">
+          <i class="fas fa-qrcode"></i> Generate QR Code
+        </button>
+        
+        <div id="qrSpinner" class="spinner" style="display: none;"></div>
+        
+        <div id="qrResult" style="margin-top: 2rem;"></div>
+      </div>
+    </section>
+    
+    <!-- Settings Section -->
+    <section id="settings" class="content-section">
+      <div class="hero-section">
+        <h1 class="hero-title">Settings</h1>
+        <p class="hero-subtitle">Customize your dashboard experience</p>
+      </div>
+      
+      <div class="settings-grid">
+        <div class="theme-card">
+          <div>
+            <h3 style="color: white;">Dark Mode</h3>
+            <p style="color: rgba(255, 255, 255, 0.8);">Toggle between light and dark themes</p>
+          </div>
+          <label class="theme-toggle">
+            <input type="checkbox" id="themeToggle">
+            <span class="theme-slider"></span>
+          </label>
+        </div>
+        
+        <div class="social-card" onclick="window.open('https://www.youtube.com/@FkAnimatimation', '_blank')">
+          <div class="social-icon youtube-icon">
+            <i class="fab fa-youtube"></i>
+          </div>
+          <div>
+            <h3>YouTube Channel</h3>
+            <p>Follow us for animation tutorials and updates</p>
+          </div>
+        </div>
+        
+        <div class="social-card" onclick="window.open('https://whatsapp.com/channel/0029Vb71mgIElaglZCU0je0x', '_blank')">
+          <div class="social-icon whatsapp-icon">
+            <i class="fab fa-whatsapp"></i>
+          </div>
+          <div>
+            <h3>WhatsApp Channel</h3>
+            <p>Get instant updates on new features</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Tools Section (Always visible) -->
+    <section class="tools-section">
+      <h2 class="tools-title">Creative Hub Tools</h2>
+      
+      <div class="tools-grid">
+        <div class="tool-card" data-delay="0.1" onclick="alert('AI Tools Dashboard - Coming Soon!')">
+          <i class="fas fa-robot tool-icon"></i>
+          <h3>Bot/AI Tools</h3>
+          <p>Access powerful AI tools and bot builders. Create, deploy, and manage AI solutions.</p>
+          <div class="tool-action">
+            <span>Explore Tools</span>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+        
+        <div class="tool-card" data-delay="0.2" onclick="alert('WhatsApp Bot Generator - Coming Soon!')">
+          <i class="fab fa-whatsapp tool-icon"></i>
+          <h3>WhatsApp Bot</h3>
+          <p>Generate and deploy WhatsApp bots with fast response times and advanced features.</p>
+          <div class="tool-action">
+            <span>Create Bot</span>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+        
+        <div class="tool-card" data-delay="0.3" onclick="window.open('hq/movie.html', '_blank')">
+          <i class="fas fa-film tool-icon"></i>
+          <h3>Movie Finder</h3>
+          <p>Find movies with trailers, ratings, and streaming options. Extensive database.</p>
+          <div class="tool-action">
+            <span>Find Movies</span>
+            <i class="fas fa-arrow-right"></i>
+          </div>
+        </div>
+      </div>
+    </section>
+    
+    <!-- Footer -->
+    <footer class="dashboard-footer">
+      <p>© 2023 Creative Hub Dashboard | All Rights Reserved</p>
+      <p>Contact: <a href="https://wa.me/254707933586" style="color: #00a8ff;">+254 707 933 586</a></p>
+    </footer>
+  </main>
+  
+  <script>
+    // Dashboard functionality
+    document.addEventListener('DOMContentLoaded', function() {
+      // Set Home as active by default
+      activateSection('home');
+      setupScrollAnimations();
+      loadSavedTheme();
+      
+      // Navigation tab functionality
+      const tabButtons = document.querySelectorAll('.tab-btn');
+      tabButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          const targetSection = this.getAttribute('data-target');
+          
+          // Update active tab
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          this.classList.add('active');
+          
+          // Show target section
+          activateSection(targetSection);
+        });
+      });
+      
+      // CTA button functionality
+      const ctaButton = document.querySelector('.cta-button');
+      if (ctaButton) {
+        ctaButton.addEventListener('click', function() {
+          const target = this.getAttribute('data-target');
+          activateSection(target);
+          
+          // Update active tab
+          tabButtons.forEach(btn => btn.classList.remove('active'));
+          document.querySelector(`[data-target="${target}"]`).classList.add('active');
+        });
+      }
+      
+      // Copy API config button
+      const copyApiBtn = document.getElementById('copyApiBtn');
+      if (copyApiBtn) {
+        copyApiBtn.addEventListener('click', copyApiConfig);
+      }
+      
+      // Generate QR button
+      const generateQrBtn = document.getElementById('generateQrBtn');
+      if (generateQrBtn) {
+        generateQrBtn.addEventListener('click', generateQRCode);
+      }
+      
+      // Theme toggle
+      const themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('change', toggleTheme);
+      }
+    });
+    
+    // Activate a section
+    function activateSection(sectionId) {
+      // Hide all sections
+      const sections = document.querySelectorAll('.content-section');
+      sections.forEach(section => {
+        section.classList.remove('active');
+      });
+      
+      // Show selected section
+      const targetSection = document.getElementById(sectionId);
+      if (targetSection) {
+        targetSection.classList.add('active');
+        
+        // Trigger animations for new section
+        setTimeout(() => {
+          const animatedElements = targetSection.querySelectorAll('.feature-card, .service-item, .tool-card');
+          animatedElements.forEach((el, index) => {
+            const delay = el.getAttribute('data-delay') || 0;
+            setTimeout(() => {
+              el.classList.add('visible');
+            }, index * 100 + (delay * 1000));
+          });
+        }, 100);
+      }
+    }
+    
+    // Scroll animations
+    function setupScrollAnimations() {
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
+      };
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const delay = entry.target.getAttribute('data-delay') || 0;
+            setTimeout(() => {
+              entry.target.classList.add('visible');
+            }, delay * 1000);
+          }
+        });
+      }, observerOptions);
+      
+      // Observe animated elements
+      const animatedElements = document.querySelectorAll('.feature-card, .service-item, .tool-card');
+      animatedElements.forEach(el => {
+        observer.observe(el);
+      });
+    }
+    
+    // Copy API configuration
+    function copyApiConfig() {
+      const apiConfig = `API_KEY="your_api_key_here"
+BASE_URL="your_base_url + api_key"`;
+      
+      navigator.clipboard.writeText(apiConfig)
+        .then(() => {
+          const copyBtn = document.getElementById('copyApiBtn');
+          const originalHTML = copyBtn.innerHTML;
+          
+          copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+          copyBtn.style.background = '#2ecc71';
+          
+          setTimeout(() => {
+            copyBtn.innerHTML = originalHTML;
+            copyBtn.style.background = '';
+          }, 2000);
+        })
+        .catch(err => {
+          console.error('Failed to copy: ', err);
+          alert('Failed to copy to clipboard. Please copy manually.');
+        });
+    }
+    
+    // Generate QR code
+    function generateQRCode() {
+      const qrSpinner = document.getElementById('qrSpinner');
+      const qrResult = document.getElementById('qrResult');
+      const generateBtn = document.getElementById('generateQrBtn');
+      
+      // Show loading spinner
+      qrSpinner.style.display = 'block';
+      qrResult.innerHTML = '';
+      generateBtn.disabled = true;
+      generateBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+      
+      // Simulate QR generation (in real app, this would call an API)
+      setTimeout(() => {
+        qrSpinner.style.display = 'none';
+        generateBtn.disabled = false;
+        generateBtn.innerHTML = '<i class="fas fa-qrcode"></i> Generate QR Code';
+        
+        // Display QR code placeholder
+        qrResult.innerHTML = `
+          <div style="background: white; padding: 25px; border-radius: 15px; display: inline-block; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+            <h4 style="margin-bottom: 15px; color: #333;">Your QR Code</h4>
+            <div style="width: 200px; height: 200px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; border-radius: 10px; margin: 0 auto;">
+              <div style="text-align: center;">
+                <i class="fas fa-qrcode" style="font-size: 80px; color: #00a8ff; margin-bottom: 10px;"></i>
+                <p style="color: #666; font-size: 14px;">Scan to connect</p>
+              </div>
+            </div>
+            <p style="color: #666; margin-top: 15px; font-size: 14px;">This QR code will expire in 24 hours</p>
+          </div>
+        `;
+      }, 2500);
+    }
+    
+    // Theme toggle functionality
+    function toggleTheme() {
+      const isDarkMode = document.body.classList.toggle('dark-mode');
+      localStorage.setItem('creativeHubTheme', isDarkMode ? 'dark' : 'light');
+    }
+    
+    // Load saved theme
+    function loadSavedTheme() {
+      const savedTheme = localStorage.getItem('creativeHubTheme');
+      const themeToggle = document.getElementById('themeToggle');
+      
+      if (savedTheme === 'dark') {
+        document.body.classList.add('dark-mode');
+        if (themeToggle) themeToggle.checked = true;
+      }
+    }
+    
+    // External link function
+    function openExternalLink(url) {
+      window.open(url, '_blank');
+    }
+  </script>
 </body>
-
-    </html>
+        </html>
